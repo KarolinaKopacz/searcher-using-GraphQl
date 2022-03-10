@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useQuery, gql } from "@apollo/client";
+import React, { useMemo, useState } from "react";
+import { useQuery } from "@apollo/client";
 import { LOAD_COUNTRIES } from "../graphQL/Queries";
 import { Link } from "react-router-dom";
 import { CountriesResponse, Country, CountryResponse } from "../graphQL/types";
 import Select from "react-select";
-import { uniqBy, values } from "remeda";
+import { uniqBy } from "remeda";
 
 const GetCountries = () => {
   const { error, loading, data } = useQuery<CountriesResponse>(LOAD_COUNTRIES);
@@ -39,7 +39,6 @@ const GetCountries = () => {
   const continentOptions = useMemo(() => {
     if (data) {
       const results = data?.countries.map((country) => {
-        console.log("country", country);
         return {
           label: country.continent.name,
           value: country.continent.name,
@@ -51,15 +50,24 @@ const GetCountries = () => {
 
   return (
     <div className="container">
-      <Select
-        options={continentOptions}
-        onChange={(value) => setSelectContinent(value?.value)}
-      />
-      <input onChange={(ev) => setInputValue(ev.target.value)} />
-      {countries.map((country) => {
-        return (
-          <div className="flex flex-row flex-wrap">
-            <div className="basis-1/4">
+      <div className="search">
+        <input
+          placeholder="Wpisz nazwę...
+          
+          "
+          className="input"
+          onChange={(ev) => setInputValue(ev.target.value)}
+        />
+        <Select
+          className="select"
+          options={continentOptions}
+          onChange={(value) => setSelectContinent(value?.value)}
+        />
+      </div>
+      <div className="listOfCountry">
+        {countries.map((country) => {
+          return (
+            <div className="country">
               <nav>
                 <Link to={`/${country.code.toLocaleLowerCase()}`}>
                   <li key={country.index}>
@@ -68,9 +76,9 @@ const GetCountries = () => {
                 </Link>
               </nav>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 };

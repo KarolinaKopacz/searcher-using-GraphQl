@@ -11,12 +11,25 @@ const CountryProperties = () => {
   });
 
   return (
-    <>
-      <div>{data?.country.languages[0].name}</div>
-      <div>{data?.country.emoji}</div>
-      <div>{data?.country.code}</div>
-      <div>{data?.country.name}</div>
-    </>
+    <div className="country-container">
+      <div className="country-site">
+        <div className="flag">
+          <span>{data?.country.emoji}</span>
+        </div>
+        <div className="title">
+          <p className="label">Country:</p>
+          <p>{data?.country.name}</p>
+        </div>
+        <div className="title">
+          <p className="label">Code:</p>
+          <p>{data?.country.code}</p>
+        </div>
+        <div className="title">
+          <p className="label">Language:</p>
+          <p>{data?.country.languages[0].name}</p>
+        </div>
+      </div>
+    </div>
   );
 };
 
