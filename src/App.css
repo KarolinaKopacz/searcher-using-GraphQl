@@ -74,20 +74,29 @@ li {
   display: flex;
   flex-direction: column;
   width: 80%;
+  min-height: 120px;
   margin: 0 auto;
 }
 .title {
   display: flex;
 }
 
-.label {
+.title > p {
+  margin: 0 0 4px 0;
+  padding: 0;
+}
+
+.title > p.label {
   width: 50%;
   display: flex;
-  justify-content: center;
+  justify-content: right;
+  font-size: 80%;
+  align-items: center;
+  margin: 0 8px 4px 0;
 }
 
 .flag > span {
-  font-size: 200px;
+  font-size: 100px;
   display: flex;
   justify-content: center;
 }

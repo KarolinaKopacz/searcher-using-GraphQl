@@ -1,15 +1,19 @@
 import React, { useMemo, useState } from "react";
 import { useQuery } from "@apollo/client";
-import { LOAD_COUNTRIES } from "../graphQL/Queries";
 import { Link } from "react-router-dom";
-import { CountriesResponse, Country, CountryResponse } from "../graphQL/types";
 import Select from "react-select";
 import { uniqBy } from "remeda";
 
-const GetCountries = () => {
+import { CountriesResponse } from "../graphQL/types";
+import { LOAD_COUNTRIES } from "../graphQL/Queries";
+import { useError } from "../hooks/useError";
+
+const CountriesScreen = () => {
   const { error, loading, data } = useQuery<CountriesResponse>(LOAD_COUNTRIES);
   const [inputValue, setInputValue] = useState("");
   const [selectedContinent, setSelectContinent] = useState<string>();
+
+  useError(error);
 
   const countries = useMemo(() => {
     if (!data) {
@@ -38,7 +42,7 @@ const GetCountries = () => {
 
   const continentOptions = useMemo(() => {
     if (data) {
-      const results = data?.countries.map((country) => {
+      const results = data.countries.map((country) => {
         return {
           label: country.continent.name,
           value: country.continent.name,
@@ -46,13 +50,13 @@ const GetCountries = () => {
       });
       return uniqBy(results, (result) => result.value);
     }
-  }, [selectedContinent]);
+  }, [data]);
 
   return (
     <div className="container">
       <div className="search">
         <input
-          placeholder="Wpisz nazwę...
+          placeholder="Search...
           
           "
           className="input"
@@ -65,22 +69,24 @@ const GetCountries = () => {
         />
       </div>
       <div className="listOfCountry">
-        {countries.map((country) => {
-          return (
-            <div className="country">
-              <nav>
-                <Link to={`/${country.code.toLocaleLowerCase()}`}>
-                  <li key={country.index}>
-                    {country.name} {country.code}
-                  </li>
-                </Link>
-              </nav>
-            </div>
-          );
-        })}
+        {loading
+          ? "Loading..."
+          : countries.map((country) => {
+              return (
+                <div className="country">
+                  <nav>
+                    <Link to={`/${country.code.toLocaleLowerCase()}`}>
+                      <li key={country.index}>
+                        {country.name} {country.code}
+                      </li>
+                    </Link>
+                  </nav>
+                </div>
+              );
+            })}
       </div>
     </div>
   );
 };
 
-export default GetCountries;
+export default CountriesScreen;
